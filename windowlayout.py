@@ -119,21 +119,30 @@ class GraphCanvas(FigureCanvas):
     def sweep_graph(self, min:int,max:int):
         self.timer.stop()
         self.x_label = "Wavelength"
-        self.file_legend = ["Output Power"]
+        self.file_legend = ["Channel 1","Channel 2","Channel 3","Channel 4"]
 
         self.x_vals = []
-        self.y_vals = [[]]
+        self.y_vals = [[],[],[],[]]
 
+        self.ax.clear()
         for i in range(min,max):
             self.x_vals.append(i)
-            self.y_vals[0].append(random.randint(10,20))
-            
-        self.ax.clear()
-        self.ax.plot(self.x_vals,self.y_vals[0])
+            for j in range(0,4):
+                self.y_vals[j].append(random.randint(1,20*(j+1)))
+                try:
+                    self.y_vals[j] = self.y_vals[i][-100:]
+                except:
+                    pass
+                if checks[j].isChecked():
+                    self.ax.plot(self.x_vals, self.y_vals[j])
+                else:
+                    self.ax.plot([],[])
+
         self.ax.set_xlabel(self.x_label)
         self.ax.set_ylabel(self.y_label)
         self.draw()
         return
+
     def save_data(self):
         save_file = open("graphdata.txt","a")
         banner = ""
